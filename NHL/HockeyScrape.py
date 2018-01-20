@@ -156,6 +156,19 @@ def getGameSummary(league, game):
 	else:
 		return None
 
+# Returns the JSON game summary file for the specified leage and gameID
+def getShifts(league, game):
+	if league is 'NHL':
+		r = requests.get('http://www.nhl.com/stats/rest/shiftcharts?cayenneExp=gameId=' + str(game))
+	elif league is 'OHL':
+		r = requests.get('http://cluster.leaguestat.com/feed/index.php?feed=gc&key=f109cf290fcf50d4&client_code=ohl&game_id=' + str(game) + '&lang_code=en&fmt=json&tab=gamesummary')
+	
+	if r.status_code == 200:
+		jsonFile = r.json()
+		return jsonFile
+	else:
+		return None
+
 # Calculates and returns the current game time
 def getGameTime(period, time):
 	minutes = (int(period)-1) * 20
@@ -191,9 +204,16 @@ def getDBPlayers(league, cursor):
 def addNHLPlayer(pl, cursor):
 	if 'birthStateProvince' not in pl:
 		pl['birthStateProvince'] = ''
+	if 'birthCountry' not in pl:
+		pl['birthCountry'] = ''
 	if 'shootsCatches' not in pl:
 		pl['shootsCatches'] = ''
 	if 'birthCity' not in pl:
 		pl['birthCity'] = ''
+	if 'birthDate' not in pl:
+		pl['birthDate'] = '1900-01-01'
 	cursor.execute('INSERT INTO nhl_player (player_id, first_name, last_name, birthdate, shoots, player_name, town, province, country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (pl['id'], unidecode(pl['firstName'].strip()), unidecode(pl['lastName'].strip()), pl['birthDate'], pl['shootsCatches'], unidecode(pl['lastName'].strip()) + '.' + unidecode(pl['firstName'].strip()), pl['birthCity'], pl['birthStateProvince'], pl['birthCountry']))
-				
+
+def convertTime(rawTime):
+	time = rawTime.split(':')[0] + '.' + rawTime.split(':')[1]
+	return time

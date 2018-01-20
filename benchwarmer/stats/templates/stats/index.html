@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<link rel="stylesheet" type="text/css" href="{% static 'stats/style.css' %}" />
+		<title>Benchwarmer</title>
+		<meta charset="utf-8">
+		<meta name="description" content="hockey stats">
+		<meta name="keywords" content="hockey, stats, NHL, AHL, OHL, QMJHL, WHL">
+		<meta name="author" content="Dan Bonham">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script>
+		  function resizeIframe(obj) {
+		    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+		  }
+		</script>
+	</head>
+	<body id="main">
+		<header>
+			<h3>benchwarmer</h3>
+			<div class="menu">
+				<a href="{% url 'stats:players' %}" target="tableFrame">stats</a>
+				<a href="https://nhltimemachine.herokuapp.com">time machine</a>
+			</div>
+		</header>
+		<iframe class="stattable"
+				name="tableFrame"
+				width="100%" 
+				height="100%"
+				src="{% url 'stats:players' %}"
+				frameborder="0"
+				scrolling="no"
+				onload="resizeIframe(this)" >
+		</iframe>
+	</body>
+</html>

@@ -1,0 +1,182 @@
+<html>
+	<head>
+		{% load static %}
+		{% load render_table from django_tables2 %}
+		<link rel="stylesheet" type="text/css" href="{% static 'stats/style.css' %}" />
+	</head>
+	<body>
+		<div class="tab">
+			<a href="{% url 'stats:players' %}" target="tableFrame">
+				<button class="tablinks">Skaters</button>
+			</a>
+			<a href="goalies.html" target="statsview">
+				<button class="tablinks" onclick="loadGoalieTable()">Goalies</button>
+			</a>
+			<a href="comparator.html" target="statsview">
+				<button class="tablinks" onclick="loadCompTable()">Teams</button>
+		 	</a>
+		</div>
+		<div id="statOptions">
+			<form action="{% url 'stats:players' %}" method="get">
+				{% csrf_token %}
+				<label class="titleLabel">League:</label>
+				<select name="league" id="league" value="AHL">
+					<option id="1" 
+					        value="1"
+					        {% if "1" == leagueChoice %}selected="selected"{% endif %}>
+					        NHL
+					</option>
+					<option id="2" 
+					        value="2"
+					        {% if "2" == leagueChoice %}selected="selected"{% endif %}>
+					        AHL
+					</option>
+					<option id="3" 
+					        value="3"
+					        {% if "3" == leagueChoice %}selected="selected"{% endif %}>
+					        OHL
+					</option>
+					<option id="4" 
+					        value="4"
+					        {% if "4" == leagueChoice %}selected="selected"{% endif %}>
+					        QMJHL
+					</option>
+					<option id="5" 
+					        value="5"
+					        {% if "5" == leagueChoice %}selected="selected"{% endif %}>
+					        WHL
+					</option>
+					<option id="6" 
+					        value="6"
+					        {% if "6" == leagueChoice %}selected="selected"{% endif %}>
+					        CHL
+					</option>
+				</select>
+				<label class="titleLabel">Season Range:</label>
+				<select name="minSeason" id="minSeason" value="57">
+					{% for s1 in seasons %}
+					<option id="{{ s1.season_id }}" 
+					        value="{{ s1.season_id }}"
+					        {% if s1 == season1Choice %}selected="selected"{% endif %}>
+					        {{ s1.name }}
+					</option>
+					{% endfor %}
+				</select>
+				<label>to</label>
+				<select name="maxSeason" id="maxSeason" value="57">
+					{% for s2 in seasons %}
+					<option id="{{ s2.season_id }}" 
+					        value="{{ s2.season_id }}"
+					        {% if s2 == season2Choice %}selected="selected"{% endif %}>
+					        {{ s2.name }}
+					</option>
+					{% endfor %}
+				</select>
+				<br>
+				<label class="titleLabel">Position:</label>
+				<select name="position" id="position" value="All Skaters">
+					<option id="1" 
+					        value="1"
+					        {% if "1" == positionChoice %}selected="selected"{% endif %}>
+					        All Skaters
+					</option>
+					<option id="2" 
+					        value="2"
+					        {% if "2" == positionChoice %}selected="selected"{% endif %}>
+					        All Forwards
+					</option>
+					<option id="3" 
+					        value="3"
+					        {% if "3" == positionChoice %}selected="selected"{% endif %}>
+					        Defensemen
+					</option>
+					<option id="4" 
+					        value="4"
+					        {% if "4" == positionChoice %}selected="selected"{% endif %}>
+					        Centers
+					</option>
+					<option id="5" 
+					        value="5"
+					        {% if "5" == positionChoice %}selected="selected"{% endif %}>
+					        Left Wingers
+					</option>
+					<option id="6" 
+					        value="6"
+					        {% if "6" == positionChoice %}selected="selected"{% endif %}>
+					        Right Wingers
+					</option>
+					<option id="7" 
+					        value="7"
+					        {% if "7" == positionChoice %}selected="selected"{% endif %}>
+					        All Wingers
+					</option>
+				</select>
+				<label class="titleLabel">Minimum GP:</label>
+				<input type="number" id="minGames" name="minGames" min="0" max="76" value="30" />
+				<label class="titleLabel">Age Range:</label>
+				<input type="number" name="minAge" min="18" max="50" value="18" />
+				<label>to</label>
+				<input type="number" name="maxAge" min="18" max="50" value="50" />
+				<br>
+				<label class="titleLabel">Report:</label>
+				<select name="report" id="report" value="Skater Summary">
+					<option id="1" 
+					        value="1"
+					        {% if "1" == reportChoice %}selected="selected"{% endif %}>
+					        Skater Summary Totals
+					</option>
+					<option id="2" 
+					        value="2"
+					        {% if "2" == reportChoice %}selected="selected"{% endif %}>
+					        Skater Summary Rates (Per GP)
+					</option>
+					<option id="3" 
+					        value="3"
+					        {% if "3" == reportChoice %}selected="selected"{% endif %}>
+					        Skater Summary Rate Percentiles
+					</option>
+					<option id="4" 
+					        value="4"
+					        {% if "4" == reportChoice %}selected="selected"{% endif %}>
+					        On Ice Totals
+					</option>
+					<option id="5" 
+					        value="5"
+					        {% if "5" == reportChoice %}selected="selected"{% endif %}>
+					        On Ice Rates (Per GP)
+					</option>
+					<option id="6" 
+					        value="6"
+					        {% if "6" == reportChoice %}selected="selected"{% endif %}>
+					        On Ice Rate Percentiles
+					</option>
+					<option id="7" 
+					        value="7"
+					        {% if "7" == reportChoice %}selected="selected"{% endif %}>
+					        Scoring By Situation
+					</option>
+					<option id="8" 
+					        value="8"
+					        {% if "8" == reportChoice %}selected="selected"{% endif %}>
+					        Scoring By Situation Rates (Per GP)
+					</option>
+					<option id="9" 
+					        value="9"
+					        {% if "9" == reportChoice %}selected="selected"{% endif %}>
+					        Scoring By Situation Rate Percentiles
+					</option>
+				</select>
+				<input type="checkbox" name="eraAdjust">Adjust for era
+				<br>
+				<input class="submit" type="submit" value="Select" />
+			</div>
+			<div class="stattable">
+				{% render_table table %}
+			</div>
+	</form>
+	<div id="footer">
+		<address><a href="mailto:bonhamdaniel@gmail.com">e-mail benchwarmer</a></address>
+		<p>&#169;2017 Dan Bonham</p>
+	</div>
+	</body>
+</html>

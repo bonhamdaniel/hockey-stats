@@ -1,0 +1,236 @@
+body {
+	background: #BCC6CC;
+	margin: 0px;
+	padding: 0px;
+	font-family: Arial;
+}
+
+header {
+	background-color: #00004d;
+	border-style: solid;
+	border-width: medium;
+	border-color: #00004d;
+}
+
+header h3 {
+	color: white;
+	text-shadow: 2px 2px black;
+	margin-left: 5%;
+}
+
+header div {
+	color: white;
+	font-weight: bold;
+	margin-right: 5%;
+	text-align: right;
+}
+
+header a, .tab a {
+	text-decoration: none;
+	color: white;
+	margin-left: 5%;
+}
+
+div.tab {
+	background-color: white;
+	text-align: center;
+	height: 20px;
+}
+
+div.tab button {
+	width: 15%;
+	background-color: inherit;
+	color: #00004d;
+	font-weight: bold;
+	text-transform: lowercase;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	margin: 0px;
+	font-size: 1em;
+	vertical-align: center;
+}
+
+div.tab button:hover {
+	background-color: #00004d;
+	color: white;
+}
+
+div.tab button.active {
+	background-color: darkgrey;
+}
+
+#statOptions {
+	text-align: center;
+	background-color: #98AFC7;
+}
+
+.titleLabel {
+	color: #00004d;
+	font-weight: bold;
+	font-size: medium;
+	margin-left: 2%;
+}
+
+#include[disabled] {
+	color: graytext;
+}
+
+input, select {
+	padding-top: 0px;
+	right-margin: 5%;
+	margin-top: 0.5%;
+}
+
+input.submit {
+	margin-bottom: .5%;
+}
+
+table {
+	margin: auto;
+	font-size: .9em;
+	font-weight: heavy;
+	border-collapse: collapse;
+}
+
+table caption {
+	color: black;
+	font-size: 1.15em;
+	font-weight: bold;
+	margin: 5px;
+}
+
+th {
+	background-color: #00004d;
+	color: #f5f5f0;
+	border: none;
+}
+
+th:hover {
+	cursor: pointer;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+tr:hover {
+	background-color: #00004d;
+	color: white;
+}
+
+th a {
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+th, td {
+	padding: 5px;
+}
+
+td {
+	text-align: center;
+	border: none;
+}
+
+th.player {
+	width: 200px;
+}
+
+td.toi {
+	width: 75px;
+	text-align: center;
+}
+
+.leftBorder {
+	border-left: 1px solid #00004d;
+}
+
+.leftDashedBorder {
+	border-left: 1px dotted #00004d;
+}
+
+#pages {
+	margin: 5px;
+	text-align: center;
+	display: block;
+}
+
+#pages .clickable:hover {
+	font-weight: bold;
+	cursor: pointer;
+}
+
+#page, .current {
+	font-weight: bold;
+}
+
+.pageNumber {
+	padding: 2px;
+}
+
+#compare {
+	text-align: center;
+}
+
+#footer { 
+	background-color: #00004d;
+    display: block;
+    color: white;
+    text-align: center;
+    margin: 0px;
+	padding-top: 1%;
+	padding-bottom: 1%;
+	height: 30px;
+}
+
+#footer a {
+	text-decoration: none;
+}
+
+#footer p {
+	font-size: .75em;
+}
+
+/* Tooltip Features */
+.tooltip {
+	position: relative;
+	/*display: block;*/
+	background-color: #00004d;
+	border: none;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	opacity: 0;
+	background-color: white;
+	color: #00004d;
+	text-align: center;
+	padding: 2px;
+	border-radius: 4px;
+	border: 1px solid #ccccff;
+	width: 120px;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -63px;
+	
+	position: absolute;
+	z-index: 1;
+}
+
+.tooltip .tooltiptext::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #ccccff transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+	opacity: 1;
+}

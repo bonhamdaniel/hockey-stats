@@ -1,0 +1,19 @@
+{% load render_table from django_tables2 %}
+{% load static %}
+<h2>Team Stats</h2>
+<form action="{% url 'stats:team' %}" method="get">
+	{% csrf_token %}
+	<label>Season:</label>
+	<select name="seasonList" id="seasonList" value="19171918">
+	{% for s1 in seasons %}
+		<option id="{{ s1.season_id }}" 
+		        value="{{ s1.season_id }}"
+		        {% if s1 == choice %}selected="selected"{% endif %}>
+		        {{ s1.season_id }}
+		</option>
+	{% endfor %}
+	<input type="submit" value="Select"/>
+	<div>
+		{% render_table table %}
+	</div>
+</form>

@@ -1,6 +1,7 @@
 import HockeyScrape
 import nhldb
 import GameFeed
+import sys
 
 def processPXP(gameID):
 	# Gets connection to specified database
@@ -216,7 +217,7 @@ def processPXP(gameID):
 			connection.close()
 
 		else:
-			print("No game #" + gameID)
+			print("No game #", gameID)
 
 	except Exception as e:
 		print(sys.exc_info()[0])
