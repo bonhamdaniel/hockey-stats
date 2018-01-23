@@ -254,19 +254,19 @@ def getTeamSummary(boxscore):
 	if "blocked" in awayInfo["teamStats"]["teamSkaterStats"]:
 		aBlocks = awayInfo["teamStats"]["teamSkaterStats"]["blocked"]
 	else:
-		aBlocks = -999
+		aBlocks = 0
 	if "takeaways" in awayInfo["teamStats"]["teamSkaterStats"]:
 		aTA = awayInfo["teamStats"]["teamSkaterStats"]["takeaways"]
 	else:
-		aTA = -999
+		aTA = 0
 	if "giveaways" in awayInfo["teamStats"]["teamSkaterStats"]:
 		aGA = awayInfo["teamStats"]["teamSkaterStats"]["giveaways"]
 	else:
-		aGA = -999
+		aGA = 0
 	if "hits" in awayInfo["teamStats"]["teamSkaterStats"]:
 		aHits = awayInfo["teamStats"]["teamSkaterStats"]["hits"]
 	else:
-		aHits = -999
+		aHits = 0
 	homeInfo = boxscore["teams"]["home"]
 	hTeam = homeInfo["team"]["id"]
 	hGoals = homeInfo["teamStats"]["teamSkaterStats"]["goals"]
@@ -283,19 +283,19 @@ def getTeamSummary(boxscore):
 	if "blocked" in homeInfo["teamStats"]["teamSkaterStats"]:
 		hBlocks = homeInfo["teamStats"]["teamSkaterStats"]["blocked"]
 	else:
-		hBlocks = -999
+		hBlocks = 0
 	if "takeaways" in homeInfo["teamStats"]["teamSkaterStats"]:
 		hTA = homeInfo["teamStats"]["teamSkaterStats"]["takeaways"]
 	else:
-		hTA = -999
+		hTA = 0
 	if "giveaways" in homeInfo["teamStats"]["teamSkaterStats"]:
 		hGA = homeInfo["teamStats"]["teamSkaterStats"]["giveaways"]
 	else:
-		hGA = -999
+		hGA = 0
 	if "hits" in homeInfo["teamStats"]["teamSkaterStats"]:
 		hHits = homeInfo["teamStats"]["teamSkaterStats"]["hits"]
 	else:
-		hHits = -999
+		hHits = 0
 	return aTeam, aGoals, aPIM, aShots, aPPG, aPPOPP, aBlocks, aTA, aGA, aHits, hTeam, hGoals, hPIM, hShots, hPPG, hPPOPP, hBlocks, hTA, hGA, hHits
 
 def getTeamPlayers(gameFile, team):
@@ -326,7 +326,7 @@ def getSkaterSummary(players, keys, player):
 	if "hits" in players[keys[player]]["stats"]["skaterStats"]:
 		hits = players[keys[player]]["stats"]["skaterStats"]["hits"]
 	else:
-		hits = -999
+		hits = 0
 	if "powerPlayGoals" in players[keys[player]]["stats"]["skaterStats"]:
 		ppg = players[keys[player]]["stats"]["skaterStats"]["powerPlayGoals"]
 	else:
@@ -339,19 +339,19 @@ def getSkaterSummary(players, keys, player):
 	if "faceOffWins" in players[keys[player]]["stats"]["skaterStats"]:
 		fow = players[keys[player]]["stats"]["skaterStats"]["faceOffWins"]
 	else:
-		fow = -999
-	if "faceOffTaken" in players[keys[player]]["stats"]["skaterStats"]:
+		fow = 0
+	if "faceoffTaken" in players[keys[player]]["stats"]["skaterStats"]:
 		fot = players[keys[player]]["stats"]["skaterStats"]["faceoffTaken"]
 	else:
-		fot = -999
+		fot = 0
 	if "takeaways" in players[keys[player]]["stats"]["skaterStats"]:
 		ta = players[keys[player]]["stats"]["skaterStats"]["takeaways"]
 	else:
-		ta = -999
+		ta = 0
 	if "giveaways" in players[keys[player]]["stats"]["skaterStats"]:
 		ga = players[keys[player]]["stats"]["skaterStats"]["giveaways"]
 	else:
-		ga = -999
+		ga = 0
 	if "shortHandedGoals" in players[keys[player]]["stats"]["skaterStats"]:
 		shg = players[keys[player]]["stats"]["skaterStats"]["shortHandedGoals"]
 	else:
@@ -363,7 +363,7 @@ def getSkaterSummary(players, keys, player):
 	if "blocked" in players[keys[player]]["stats"]["skaterStats"]:
 		blocks = players[keys[player]]["stats"]["skaterStats"]["blocked"]
 	else:
-		blocks = -999
+		blocks = 0
 	if "plusMinus" in players[keys[player]]["stats"]["skaterStats"]:
 		plusMinus = players[keys[player]]["stats"]["skaterStats"]["plusMinus"]
 	else:
@@ -372,17 +372,17 @@ def getSkaterSummary(players, keys, player):
 		EVTOI = players[keys[player]]["stats"]["skaterStats"]["evenTimeOnIce"].strip()
 		EVTOI = int(EVTOI.split(":")[0]) + int(EVTOI.split(":")[1]) / 60
 	else:
-		EVTOI = -999
+		EVTOI = 0
 	if "powerPlayTimeOnIce" in players[keys[player]]["stats"]["skaterStats"]:
 		PPTOI = players[keys[player]]["stats"]["skaterStats"]["powerPlayTimeOnIce"].strip()
 		PPTOI = int(PPTOI.split(":")[0]) + int(PPTOI.split(":")[1]) / 60
 	else:
-		PPTOI = -999
+		PPTOI = 0
 	if "shortHandedTimeOnIce" in players[keys[player]]["stats"]["skaterStats"]:
 		SHTOI = players[keys[player]]["stats"]["skaterStats"]["shortHandedTimeOnIce"].strip()
 		SHTOI = int(SHTOI.split(":")[0]) + int(SHTOI.split(":")[1]) / 60
 	else:
-		SHTOI = -999
+		SHTOI = 0
 	return no, toi, assists, goals, shots, hits, ppg, ppa, pim, fow, fot, ta, ga, shg, sha, blocks, plusMinus, EVTOI, PPTOI, SHTOI
 
 def getGoalieSummary(players, keys, player):
@@ -413,12 +413,12 @@ def getGoalieSummary(players, keys, player):
 		evsa = players[keys[player]]["stats"]["goalieStats"]["evenShotsAgainst"]
 		ppsa = players[keys[player]]["stats"]["goalieStats"]["powerPlayShotsAgainst"]
 	else:
-		ppsv = -999
-		shsv = -999
-		evsv = -999
-		shsa = -999
-		evsa = -999
-		ppsa = -999
+		ppsv = 0
+		shsv = 0
+		evsv = 0
+		shsa = 0
+		evsa = 0
+		ppsa = 0
 	if "decision" in players[keys[player]]["stats"]["goalieStats"]:
 		decision = players[keys[player]]["stats"]["goalieStats"]["decision"].strip()
 	else:

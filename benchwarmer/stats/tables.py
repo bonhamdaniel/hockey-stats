@@ -53,6 +53,44 @@ class TimeMachineSkater(tables.Table):
 	def render_rank(self):
 		return '%d' % next(self.counter)
 
+class NhlSkaterSummary(tables.Table):
+	rank = tables.Column(empty_values=(), verbose_name='#')
+	player = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='Player')
+	team = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='Team')
+	age = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='Age')
+	position = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='Pos')
+	season = tables.Column(attrs = {'td': {'class': 'leftDashedBorder'}}, verbose_name='Season')
+	gp = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='GP')
+	g = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='G')
+	a = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='A')
+	p = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='P')
+	pm = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='+/-')
+	pim = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='PIM')
+	s = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='S')
+	sp = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='S%')
+	esp = tables.Column(attrs = {'td': {'class': 'leftDashedBorder'}}, verbose_name='ESP')
+	ppp = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='PPP')
+	shp = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='SHP')
+	h = tables.Column(attrs = {'td': {'class': 'leftDashedBorder'}}, verbose_name='H')
+	bl = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='BL')
+	ga = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='GA')
+	ta = tables.Column(attrs = {'td': {'class': 'leftDashedBorder'}}, verbose_name='TA')
+	fow = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='FOW')
+	fol = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='FOL')
+	fop = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='FO%')
+	sog = tables.Column(attrs = {'td': {'class': 'leftDashedBorder'}}, verbose_name='SOG')
+	soa = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='SOA')
+	sop = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='SO%')
+	toi = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='TOI')
+
+	def __init__(self, *args, **kwargs):
+		super(NhlSkaterSummary, self).__init__(*args, **kwargs)
+		self.counter = itertools.count()
+		next(self.counter)
+
+	def render_rank(self):
+		return '%d' % next(self.counter)
+
 class AhlSkaterSummary(tables.Table):
 	rank = tables.Column(empty_values=(), verbose_name='#')
 	player = tables.Column(attrs = {'td': {'class': 'center'}}, verbose_name='Player')
@@ -212,6 +250,47 @@ def summarizeTeamData(data):
 		row = cursor.fetchall()
 		for r in row:
 			result.append({'team': r[0]})
+	return result
+
+def nhlSkaterSummary(season, maxSeason, positions, minGP, minAge, maxAge):
+	result = []
+	positions = int(positions)
+	with connection.cursor() as cursor:
+		if positions == 1:
+			params = [season.start_date, maxSeason.start_date, str(minGP), str(minAge), str(maxAge)]
+			cursor.execute('SELECT * FROM nhl_skater_summary_tot JOIN nhl_season ON nhl_skater_summary_tot.\"SEASON\" = nhl_season.season_id WHERE start_date >= %s AND start_date <= %s AND \"GP\" >= %s AND \"AGE\" > %s AND \"AGE\" < %s', params)
+		elif positions == 2:
+			cursor.execute('SELECT * FROM nhl_skater_summary_tot JOIN nhl_season ON nhl_skater_summary_tot.\"SEASON\" = nhl_season.season_id WHERE start_date >= %s AND start_date <= %s AND \"POS\" <> %s AND \"GP\" >= %s AND \"AGE\" > %s AND \"AGE\" < %s', [season.start_date, maxSeason.start_date, 'D', str(minGP), str(minAge), str(maxAge)])
+		elif positions == 3:
+			cursor.execute('SELECT * FROM nhl_skater_summary_tot JOIN nhl_season ON nhl_skater_summary_tot.\"SEASON\" = nhl_season.season_id WHERE start_date >= %s AND start_date <= %s AND \"POS\" = %s AND \"GP\" >= %s AND \"AGE\" > %s AND \"AGE\" < %s', [season.start_date, maxSeason.start_date, 'D', str(minGP), str(minAge), str(maxAge)])
+		elif positions == 4:
+			cursor.execute('SELECT * FROM nhl_skater_summary_tot JOIN nhl_season ON nhl_skater_summary_tot.\"SEASON\" = nhl_season.season_id WHERE start_date >= %s AND start_date <= %s AND \"POS\" = %s AND \"GP\" >= %s AND \"AGE\" > %s AND \"AGE\" < %s', [season.start_date, maxSeason.start_date, 'C', str(minGP), str(minAge), str(maxAge)])
+		elif positions == 5:
+			cursor.execute('SELECT * FROM nhl_skater_summary_tot JOIN nhl_season ON nhl_skater_summary_tot.\"SEASON\" = nhl_season.season_id WHERE start_date >= %s AND start_date <= %s AND \"POS\" = %s AND \"GP\" >= %s AND \"AGE\" > %s AND \"AGE\" < %s', [season.start_date, maxSeason.start_date, 'LW', str(minGP), str(minAge), str(maxAge)])
+		elif positions == 6:
+			cursor.execute('SELECT * FROM nhl_skater_summary_tot JOIN nhl_season ON nhl_skater_summary_tot.\"SEASON\" = nhl_season.season_id WHERE start_date >= %s AND start_date <= %s AND \"POS\" = %s AND \"GP\" >= %s AND \"AGE\" > %s AND \"AGE\" < %s', [season.start_date, maxSeason.start_date, 'RW', str(minGP), str(minAge), str(maxAge)])
+		else:
+			cursor.execute('SELECT * FROM nhl_skater_summary_tot JOIN nhl_season ON nhl_skater_summary_tot.\"SEASON\" = nhl_season.season_id WHERE start_date >= %s AND start_date <= %s AND (\"POS\" = %s OR \"POS\" = %s) AND \"GP\" >= %s AND \"AGE\" > %s AND \"AGE\" < %s', [season.start_date, maxSeason.start_date, 'LW', 'RW', str(minGP), str(minAge), str(maxAge)])
+		stats = cursor.fetchall()
+		for s in stats:
+			if s[10] == 0: 
+				sp = 0.0
+			else:
+				sp = round(s[6] / s[10] * 100, 1)
+			if s[26] == 0:
+				sop = 0.0
+			else:
+				sog = s[25]
+				soa = s[26]
+				sop = round(s[25] / s[26] * 100, 1)
+			if s[24] == 0:
+				fop = 0.0
+			else:
+				fow = s[23]
+				foa = s[24]
+				fol = foa-fow
+				fop = round(s[23] / s[24] * 100, 1)
+			result.append({'player':s[0], 'team':s[1], 'season':str(s[4])[0:4]+'-'+str(s[4])[6:], 'position':s[2], 'age':s[3], 'gp':s[5], 'g':s[6], 'a':s[7], 'p':s[6]+s[7], 'pm':s[8], 'pim':s[9], 's':s[10], 'sp':sp, 'esp':s[6]+s[7]-s[11]-s[12]-s[13]-s[14], 'ppp':s[11]+s[12], 'shp':s[13]+s[14], 'h':s[19], 'bl':s[20], 'ga':s[21], 'ta':s[22], 'fow':fow, 'fol':fol, 'fop':fop,'sog':sog, 'soa':soa, 'sop':sop, 'toi':round(s[15], 2)})
 	return result
 
 def ahlSkaterSummary(season, maxSeason, positions, minGP, minAge, maxAge):
