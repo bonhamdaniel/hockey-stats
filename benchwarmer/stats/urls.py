@@ -13,4 +13,6 @@ urlpatterns = [
 	path('locations/', views.locations, name='locations'),
 	# Ajax to get seasons
 	path('ajax/getseasons/', views.getSeasons, name='getseasons'),
+	# Ajax to get skaters
+	path('ajax/getskaters/', views.getSkaters, name='getskaters'),
 ]

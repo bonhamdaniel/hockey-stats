@@ -3,9 +3,10 @@ from django.http import HttpResponse, JsonResponse
 from django_tables2 import RequestConfig
 from django.db.models import Q
 from django.forms.models import model_to_dict
+from django.db import connection
 from .charts import BubbleChart
 from .tables import NhlTeamStats, NhlSkaterSummary, nhlSkaterSummary, summarizeTeamData, AhlSkaterSummary, ahlSkaterSummary, AhlSkaterSummaryRates, ahlSkaterSummaryRates, AhlSkaterSummaryPercentiles, ahlSkaterSummaryPercentiles, AhlOnIce, ahlOnIce, AhlScoringSituation, ahlScoringSituation
-from .models import NhlTeam, NhlTeamSummary, NhlSeason, NhlGame, AhlSeason
+from .models import NhlTeam, NhlTeamSummary, NhlSeason, NhlGame, AhlSeason, NhlPlayerBio, NhlPlayer
 
 def index(request):
 	return render(request, 'stats/index.html')
@@ -110,8 +111,37 @@ def teams(request):
 	return HttpResponse(output)
 
 def locations(request):
-	return render(request, 'stats/locations.html', { 'bubble_chart': BubbleChart() })
-
+	# League Menu
+	if 'league' not in request.GET:
+		leagueChoice = '1'
+	else:
+		leagueChoice = request.GET['league']
+	# MinSeason Menu
+	if 'minSeason' not in request.GET:
+		season1Choice = '20172018'
+	else:
+		season1Choice = request.GET['minSeason']
+	# MaxSeason Menu
+	if 'maxSeason' not in request.GET:
+		season2Choice = '20172018'
+	else:
+		season2Choice = request.GET['maxSeason']
+	# Position Menu
+	if 'position' not in request.GET:
+		positionChoice = '1'
+	else:
+		positionChoice = request.GET['position']
+	# Skater Menu
+	if 'skaters' not in request.GET:
+		skaterChoice = '8479318'
+	else:
+		skaterChoice = request.GET['skaters']
+	# Report Menu
+	if 'report' not in request.GET:
+		reportChoice = '4'
+	else:
+		reportChoice = request.GET['report']
+	return render(request, 'stats/locations.html', { 'bubble_chart': BubbleChart(), 'leagueChoice': leagueChoice, 'season1Choice': season1Choice, 'season2Choice':season2Choice, 'positionChoice': positionChoice, 'skaterChoice': skaterChoice, 'reportChoice': reportChoice })
 
 def getSeasons(request):
 	league = request.GET['league']
@@ -121,3 +151,33 @@ def getSeasons(request):
 	else:
 		leagueSeasons = AhlSeason.objects.filter(Q(name__contains='Regular')).order_by('-start_date').values('season_id', 'name', 'career', 'playoff', 'start_date')
 	return JsonResponse({'leagueSeasons':list(leagueSeasons)})
+
+# Used by the location maps tool to populate skater select box based on other menu values
+def getSkaters(request):
+	# Get vales from menu options - used to select appropriate skater set
+	league = request.GET['league']
+	position = request.GET['position']
+	minSeason = request.GET['minSeason']
+	maxSeason = request.GET['maxSeason']
+
+	# Get appropriateleague seasons
+	if int(league) == 1:
+		with connection.cursor() as cursor:
+			if int(position) == 1:
+				cursor.execute('SELECT * FROM nhl_locations_skaters WHERE position <> %s ORDER BY player_name', ['G', ])
+			elif int(position) == 2:
+				cursor.execute('SELECT * FROM nhl_locations_skaters WHERE position <> %s AND position <> %s ORDER BY player_name', ['G', 'D'])
+			elif int(position) == 3:
+				cursor.execute('SELECT * FROM nhl_locations_skaters WHERE position = %s ORDER BY player_name', ['D', ])
+			elif int(position) == 4:
+				cursor.execute('SELECT * FROM nhl_locations_skaters WHERE position = %s ORDER BY player_name', ['C', ])
+			elif int(position) == 5:
+				cursor.execute('SELECT * FROM nhl_locations_skaters WHERE position = %s ORDER BY player_name', ['L', ])
+			elif int(position) == 6:
+				cursor.execute('SELECT * FROM nhl_locations_skaters WHERE position = %s ORDER BY player_name', ['R', ])
+			elif int(position) == 7:
+				cursor.execute('SELECT * FROM nhl_locations_skaters WHERE position = %s OR position = %s ORDER BY player_name', ['L', 'R'])
+			skaters = cursor.fetchall()
+	else:
+		leagueSeasons = AhlSeason.objects.filter(Q(name__contains='Regular')).order_by('-start_date').values('season_id', 'name', 'career', 'playoff', 'start_date')
+	return JsonResponse({'skaters':list(skaters)})

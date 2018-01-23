@@ -6,11 +6,10 @@
 		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
 		<script src="{% static 'stats/stats.js' %}"></script>
-		<script src="{% static 'stats/location.js' %}"></script> 
 	</head>
 	<body>
 		<div class="tab">
-			<a href="{% url 'stats:players' %}" target="tableFrame">
+			<a href="{% url 'stats:locations' %}" target="tableFrame">
 				<button class="tablinks">Skaters</button>
 			</a>
 			<a href="goalies.html" target="statsview">
@@ -21,7 +20,7 @@
 		 	</a>
 		</div>
 		<div id="statoptions">
-			<form action="{% url 'stats:players' %}" method="get">{% csrf_token %}
+			<form action="{% url 'stats:locations' %}" method="get">{% csrf_token %}
 				<label class="titleLabel">League:</label>
 				<select name="league" id="league" value="NHL">
 					<option id="1" 
@@ -120,6 +119,10 @@
 					        All Wingers
 					</option>
 				</select>
+				<label class="titleLabel">Player</label>
+				<select id="skaters" name="skaters">
+				</select>
+				<br>
 				<label class="titleLabel">Report:</label>
 				<select name="report" id="report" value="blocks">
 					<option id="1" 
@@ -168,7 +171,7 @@
 			</div>
 	</form>
 	<div class="stattable" width="80%">
-			{{ bubble_chart.as_html }}
+			{% render_chart bubble_chart leagueChoice season1Choice season2Choice skaterChoice reportChoice %}
 	</div>
 	<div id="footer">
 		<address><a href="mailto:bonhamdaniel@gmail.com">e-mail benchwarmer</a></address>
